@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../example
+
+patches:
+  - path: patches/deployment-amd64.yaml
+    target:
+      group: apps
+      version: v1
+      kind: Deployment
+
+  - path: patches/statefulset-amd64.yaml
+    target:
+      group: apps
+      version: v1
+      kind: StatefulSet
+
+  - path: patches/daemonset-amd64.yaml
+    target:
+      group: apps
+      version: v1
+      kind: DaemonSet
