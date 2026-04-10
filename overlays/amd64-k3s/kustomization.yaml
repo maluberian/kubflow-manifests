@@ -1,8 +1,63 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
+sortOptions:
+  order: legacy
+  legacySortOptions:
+    orderFirst:
+    - Namespace
+    - ResourceQuota
+    - StorageClass
+    - CustomResourceDefinition
+    - MutatingWebhookConfiguration
+    - ServiceAccount
+    - PodSecurityPolicy
+    - NetworkPolicy
+    - Role
+    - ClusterRole
+    - RoleBinding
+    - ClusterRoleBinding
+    - ConfigMap
+    - Secret
+    - Endpoints
+    - Service
+    - LimitRange
+    - PriorityClass
+    - PersistentVolume
+    - PersistentVolumeClaim
+    - Deployment
+    - StatefulSet
+    - CronJob
+    - PodDisruptionBudget
+    orderLast:
+    - ValidatingWebhookConfiguration
+
 resources:
-  - ../../example
+# Cert-Manager
+- ../common/cert-manager/overlays/kubeflow
+# Istio
+- ../common/istio/istio-crds/base
+- ../common/istio/istio-namespace/base
+- ../common/istio/istio-install/overlays/oauth2-proxy
+- ../common/oauth2-proxy/overlays/m2m-dex-only       # for all clusters
+- ../common/dex/overlays/oauth2-proxy
+- ../common/istio/cluster-local-gateway/base
+- ../common/kubeflow-namespace/base
+- ../common/kubeflow-roles/base
+- ../common/istio/kubeflow-istio-resources/base
+- ../applications/pipeline/overlays  # Pipeline definitions stored in the database
+- ../applications/katib/upstream/installs/katib-with-kubeflow
+- ../applications/centraldashboard/overlays/oauth2-proxy
+- ../applications/admission-webhook/upstream/overlays/cert-manager
+- ../applications/jupyter/jupyter-web-app/upstream/overlays/istio
+- ../applications/jupyter/notebook-controller/upstream/overlays/kubeflow
+- ../applications/profiles/pss  # TODO MUST BE UPSTREAMED
+- ../applications/pvcviewer-controller/upstream/base
+- ../applications/volumes-web-app/upstream/overlays/istio
+- ../applications/tensorboard/tensorboard-controller/upstream/overlays/kubeflow
+- ../applications/tensorboard/tensorboards-web-app/upstream/overlays/istio
+- ../applications/trainer/overlays
+- ../common/user-namespace/base
 
 patches:
   - path: patches/deployment-amd64.yaml
