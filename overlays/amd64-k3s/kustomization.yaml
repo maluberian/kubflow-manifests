@@ -79,3 +79,4 @@ patches:
       kind: DaemonSet
 
   - path: patches/volumes-seaweedfs.yaml
+  - path: patches/tensorboard-istio.yaml
