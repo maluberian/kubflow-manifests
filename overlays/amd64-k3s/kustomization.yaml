@@ -77,3 +77,5 @@ patches:
       group: apps
       version: v1
       kind: DaemonSet
+
+  - path: patches/volumes-seaweedfs.yaml
